@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <cstring>
+#include <stdlib.h>
 using namespace std;
 
 class Employee
@@ -44,6 +44,10 @@ public:
         return email;
     }
     
+    void setPass(string newPass)
+    {
+        passEm = newPass;
+    }
     void setName(string newName)
     {
         name = newName;
@@ -106,18 +110,10 @@ void Employee::Info()
     cout << "Dia chi: " << address << endl;
     cout << "So dien thoai: " << number << endl;
     cout << "Email: " << email << endl;
-    
-    ofstream fileOut("[username].txt");
-    
-    fileOut << "Ho va ten: " << name << endl;
-    fileOut << "Dia chi: " << address << endl;
-    fileOut << "So dien thoai: " << number << endl;
-    fileOut << "Email: " << email << endl;
-    
-    fileOut.close();
 }
 bool Employee::CheckEmployee()
 {
+    
     ifstream fileIn("inputEmployee.txt");
     string userInput;
     string passInput;
@@ -195,7 +191,47 @@ void deleteEmployee(Employee a[], int n, int index)
         a[i] = a[i + 1];
     }
 }
-void Menu(Employee ds[], int &n)
+
+void FileOutUser(Employee ds[], int &n)
+{
+    ofstream fileOut("[username].txt");
+    for (int i = 0; i < n; i++)
+    {
+        fileOut << "Thong tin User thu " << i + 1 << ":" << endl;
+        fileOut << "Ho va ten: " << ds[i].getName() << endl;
+        fileOut << "Dia chi: " << ds[i].getAddress() << endl;
+        fileOut << "So dien thoai: " << ds[i].getNumber() << endl;
+        fileOut << "Email: " << ds[i].getEmail() << endl;
+        fileOut << endl;
+    }
+    fileOut.close();
+}
+
+void FileOutEm(Employee ds[], int &n)
+{
+    ofstream fileOut("inputEmployee.txt");
+    for (int i = 0; i < n; i++)
+    {
+        fileOut << ds[i].getUser() << endl;
+        fileOut << 111111 << endl;
+        fileOut << endl;
+    }
+    fileOut.close();
+}
+
+void FileOutEmAfter(Employee ds[], int &n)
+{
+    ofstream fileOut("inputEmployee.txt");
+    for (int i = 0; i < n; i++)
+    {
+        fileOut << ds[i].getUser() << endl;
+        fileOut << ds[i].getPass() << endl;
+        fileOut << endl;
+    }
+    fileOut.close();
+}
+
+void MenuAd(Employee ds[], int &n)
 {
     int choice;
     Employee nv;
@@ -224,6 +260,9 @@ void Menu(Employee ds[], int &n)
             nv.NhapEmployee();
             ds[n] = nv;
             n++;
+            
+            FileOutUser(ds, n);
+            FileOutEm(ds, n);
         }
         else if (choice == 2)
         {
@@ -241,12 +280,6 @@ void Menu(Employee ds[], int &n)
             }
             n--;
             
-            cout << "\n Danh sach sau khi xoa: " << endl;
-            for (int i = 0; i < n; i++)
-            {
-                ds[i].Info();
-                cout << endl;
-            }
         }
         else if (choice == 3)
         {
@@ -322,6 +355,7 @@ void Menu(Employee ds[], int &n)
                         }
                         else if (option == 5)
                         {
+                            FileOutUser(ds, n);
                             break;
                         }
                     }
@@ -333,11 +367,95 @@ void Menu(Employee ds[], int &n)
             for (int i = 0; i < n; i++)
             {
                 cout << "Thong tin User thu " << i + 1 << ":" << endl;
-                ds[i].Info();
+                cout << "Username: " << ds[i].getUser() << endl;
+                cout << "Password: " << 111111 << endl;
+                cout << "Ho va ten: " << ds[i].getName() << endl;
+                cout << "Dia chi: " << ds[i].getAddress() << endl;
+                cout << "So dien thoai: " << ds[i].getNumber() << endl;
+                cout << "Email: " << ds[i].getEmail() << endl;
                 cout << endl;
             }
+            
+            FileOutUser(ds, n);
         }
-        else if (choice == 6)
+        else
+        {
+            break;
+        }
+    }
+}
+
+void MenuEm(Employee ds[], int &n)
+{
+    int choice;
+    Employee nv;
+    
+    while (true)
+    {
+        cout << "\n\n\t\t * * * * * * * Menu * * * * * * *" << endl;
+        cout << "\t\t         1. Xem thông tin tài khoản" << endl;
+        cout << "\t\t         2. Đổi password" << endl;
+        cout << "\t\t         3. Thoat" << endl;
+        cout << "\t\t * * * * * * * * * * * * * * * * * *" << endl;
+        
+        cout << "\n Nhap lua chon: ";
+        cin >> choice;
+        
+        if (choice < 1 || choice > 3)
+        {
+            cout << "Lua chon khong hop le. Xin kiem tra lai !" << endl;
+        }
+        else if (choice == 1)
+        {
+            // Hiển thị thông tin theo tên đăng nhập tương ứng có trong file [username].txt
+            
+            for (int i = 0; i < n; i++)
+            {
+                if (ds[i].getUser() == ds[i].getUser())
+                {
+                    ds[i].Info();
+                    break;
+                }
+            }
+        }
+        else if (choice == 2)
+        {
+            
+            // Đổi password của user đăng nhập tương ứng có trong file [username].txt
+            
+            for (int i = 0; i < n; i++)
+            {
+                if (ds[i].getUser() == ds[i].getUser())
+                {
+                    string oldPass, newPassword1, newPassword2;
+                    
+                    while (true)
+                    {
+                        cout << "Nhap password moi: ";
+                        cin.ignore();
+                        cin >> newPassword1;
+                        
+                        cout << "Xac nhan password moi: ";
+                        cin >> newPassword2;
+                        
+                        if (newPassword1 == newPassword2)
+                        {
+                            ds[i].setPass(newPassword1);
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Ban da nhap sai. Xin moi nhap lai !";
+                            cout << endl;
+                        }
+                    }
+                    
+                    FileOutEmAfter(ds, n);
+                    break;
+                }
+            }
+        }
+        else
         {
             break;
         }
@@ -347,6 +465,8 @@ void Menu(Employee ds[], int &n)
 int main()
 {
     int select;
+    Employee ds[1001];
+    int n = 0;
     
     while (true) {
         cout << "\n\n\t\t 1. Admin" << endl;
@@ -359,6 +479,7 @@ int main()
         
         if (select < 1 || select > 3)
         {
+            //system("cls");
             cout << "Lua chon khong nam trong pham vi. Xin moi nhap lai";
         }
         else if (select == 1)
@@ -376,6 +497,7 @@ int main()
                 if (ad.CheckAdmin() == true)
                 {
                     cout << "Dang nhap thanh cong" << endl;
+                    MenuAd(ds, n);
                     break;
                 }
                 else
@@ -383,12 +505,6 @@ int main()
                     cout << "Dang nhap khong thanh cong" << endl;
                 }
             }
-            
-            Employee ds[1001];
-            int n = 0;
-            
-            Menu(ds, n);
-            
         }
         else if (select == 2)
         {
@@ -397,23 +513,32 @@ int main()
             cout << "\n\n\t\t * * * * * * * * * * * * * * * * * * * *" << endl;
             cout << endl;
             
+            int count = 0;
             while (true)
             {
                 Employee em;
-                
                 em.LoginEmployee();
+                
                 if (em.CheckEmployee() == true)
                 {
                     cout << "Dang nhap thanh cong" << endl;
+                    MenuEm(ds, n);
                     break;
                 }
                 else
                 {
-                    cout << "Dang nhap khong thanh cong. Xin moi thu lai" << endl;
+                    cout << "Dang nhap khong thanh cong" << endl;
+                    count++;
                 }
+                
+                if (count == 3)
+                {
+                    break;
+                }
+                
             }
         }
-        else if (select == 3)
+        else
         {
             break;
         }
