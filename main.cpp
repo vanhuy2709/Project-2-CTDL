@@ -114,7 +114,7 @@ void Employee::Info()
 bool Employee::CheckEmployee()
 {
     
-    ifstream fileIn("inputEmployee.txt");
+    ifstream fileIn("Employee.txt");
     string userInput;
     string passInput;
     
@@ -166,7 +166,7 @@ void Admin::LoginAdmin()
 
 bool Admin::CheckAdmin()
 {
-    ifstream fileIn("inputAdmin.txt");
+    ifstream fileIn("Administrator.txt");
     string userInput;
     string passInput;
     
@@ -209,7 +209,7 @@ void FileOutUser(Employee ds[], int &n)
 
 void FileOutEm(Employee ds[], int &n)
 {
-    ofstream fileOut("inputEmployee.txt");
+    ofstream fileOut("Employee.txt");
     for (int i = 0; i < n; i++)
     {
         fileOut << ds[i].getUser() << endl;
@@ -221,7 +221,7 @@ void FileOutEm(Employee ds[], int &n)
 
 void FileOutEmAfter(Employee ds[], int &n)
 {
-    ofstream fileOut("inputEmployee.txt");
+    ofstream fileOut("Employee.txt");
     for (int i = 0; i < n; i++)
     {
         fileOut << ds[i].getUser() << endl;
